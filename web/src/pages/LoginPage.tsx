@@ -10,6 +10,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -61,7 +62,15 @@ export default function LoginPage() {
             />
           </label>
           {error && <p className="form-error" data-testid="login-error" role="alert">{error}</p>}
-          <button type="submit" className="btn-primary btn-block" disabled={busy}>
+          <label className="remember-me" data-testid="login-remember">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+            <span>Remember me</span>
+          </label>
+          <button type="submit" className="btn-primary btn-teal btn-block" disabled={busy}>
             {busy ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
