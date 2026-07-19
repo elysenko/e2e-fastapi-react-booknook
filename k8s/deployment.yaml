@@ -1,27 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: e2e-fastapi-react-booknook
-  namespace: colossus-e2e-fastapi-react-booknook
+  name: e2e-fastapi-react-booknook-staging
+  namespace: colossus-e2e-fastapi-react-booknook-staging
   labels:
-    app: e2e-fastapi-react-booknook
+    app: e2e-fastapi-react-booknook-staging
     managed-by: colossus
 spec:
   replicas: 1
-  # Recreate (NOT the default RollingUpdate): the per-project namespace has a hard
-  # memory ResourceQuota. A RollingUpdate creates the new pod before terminating the
-  # old one, transiently needing 2x the pod's memory — which the quota denies, so the
-  # rollout stalls with ProgressDeadlineExceeded. Kill-before-create is correct for a
-  # single-replica staging app (a few seconds of downtime is acceptable).
+  # Recreate: per-project namespace has a hard memory ResourceQuota that a RollingUpdate
+  # would exceed transiently.
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: e2e-fastapi-react-booknook
+      app: e2e-fastapi-react-booknook-staging
   template:
     metadata:
       labels:
-        app: e2e-fastapi-react-booknook
+        app: e2e-fastapi-react-booknook-staging
     spec:
       hostAliases:
         - ip: "192.168.50.250"
@@ -29,7 +26,7 @@ spec:
             - "ubuntu.desmana-truck.ts.net"
       containers:
         - name: app
-          image: ubuntu:30500/e2e-fastapi-react-booknook:latest
+          image: ubuntu:30500/e2e-fastapi-react-booknook-staging:latest
           imagePullPolicy: Always
           envFrom:
             - secretRef:

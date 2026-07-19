@@ -1,12 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: colossus-e2e-fastapi-react-booknook
+namespace: colossus-e2e-fastapi-react-booknook-staging
 resources:
   - k8s/deployment.yaml
   - k8s/service.yaml
   - k8s/ingress.yaml
 images:
-  - name: ubuntu:30500/e2e-fastapi-react-booknook
-    digest: sha256:60e6d44ecf0a1ef34f6085ab9ea6263b52329dce630982e6ac91d7092da4bc60
+  - name: ubuntu:30500/e2e-fastapi-react-booknook-staging
+    digest: sha256:55978d6f4e532cac86c85cd324c235837168bdf5af34a2f00989f29989365c8d
 # Redeploy:  kubectl apply -k . (re-applies this exact image)
 # Rebuild:   re-trigger the deploy pipeline for branch main in Colossus
