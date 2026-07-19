@@ -10,5 +10,16 @@
       }
     ]
   },
-  "_component_requirements": {}
+  "_component_requirements": {
+    "_global": {
+      "requirements": [
+        {
+          "text": "Revision: on the sign-in page make the primary button teal, and add a \"Remember me\" checkbox above it.",
+          "type": "behavioral",
+          "source": "feedback",
+          "rev": 1
+        }
+      ]
+    }
+  }
 }

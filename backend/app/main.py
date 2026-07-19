@@ -1,36 +1,43 @@
 """FastAPI app entry. Serve contract: uvicorn on PORT=3000 behind the nginx /api proxy
-(web/nginx.conf strips nothing — all routes here are mounted under /api). Keep
+(web/nginx.conf strips nothing — all API routes are mounted under /api). Keep
 GET /api/health intact: the platform's backend reachability probe depends on it."""
-from fastapi import Depends, FastAPI, HTTPException
-from pydantic import BaseModel
-from sqlalchemy import select
-from sqlalchemy.orm import Session
+import os
 
-from .auth import get_current_user, sign_token, verify_password
-from .database import get_db
-from .models import User
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 
-app = FastAPI(title="app-backend", docs_url="/api/docs", openapi_url="/api/openapi.json")
+from .database import engine
+from .routers import auth_router, books_router, settings_router
+
+app = FastAPI(title="booknook-backend", docs_url="/api/docs", openapi_url="/api/openapi.json")
+
+# CORS: same-origin in prod (nginx proxies /api), permissive for local dev proxies.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=os.environ.get("CORS_ORIGINS", "*").split(","),
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(auth_router.router)
+app.include_router(books_router.router)
+app.include_router(settings_router.router)
 
 
 @app.get("/api/health")
 def health() -> dict:
+    """Liveness probe (no DB dependency) — platform backend reachability check."""
     return {"status": "ok"}
 
 
-class LoginBody(BaseModel):
-    email: str
-    password: str
-
-
-@app.post("/api/auth/login")
-def login(body: LoginBody, db: Session = Depends(get_db)) -> dict:
-    user = db.execute(select(User).where(User.email == body.email)).scalar_one_or_none()
-    if user is None or not verify_password(body.password, user.password_hash):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    return {"token": sign_token(user), "user": {"id": user.id, "email": user.email, "role": user.role, "name": user.name}}
-
-
-@app.get("/api/auth/me")
-def me(user: User = Depends(get_current_user)) -> dict:
-    return {"id": user.id, "email": user.email, "role": user.role, "name": user.name}
+@app.get("/api/health/deep")
+def health_deep() -> dict:
+    """Readiness probe: verifies the database connection is live."""
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+    except Exception as exc:  # pragma: no cover - surfaced as degraded payload
+        return {"status": "degraded", "database": "unreachable", "detail": str(exc)[:200]}
+    return {"status": "ok", "database": "ok"}

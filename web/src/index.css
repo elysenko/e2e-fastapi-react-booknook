@@ -12,6 +12,8 @@
   --brand-dark: #6f4926;
   --brand-tint: #f0e4d5;
   --gold: #d99b2b;
+  --teal: #0f8b8d;
+  --teal-dark: #0b6f70;
   --green: #4f7a52;
   --green-tint: #e4efe2;
   --blue: #4f6d8b;
@@ -59,7 +61,20 @@ button { font-family: inherit; cursor: pointer; }
 .btn-primary:hover { background: var(--brand-dark); }
 .btn-primary:active { transform: translateY(1px); }
 .btn-primary:disabled { opacity: 0.6; cursor: default; }
+.btn-teal { background: var(--teal); }
+.btn-teal:hover { background: var(--teal-dark); }
 .btn-block { width: 100%; }
+
+/* ---------- Remember-me checkbox ---------- */
+.remember-me {
+  display: flex; align-items: center; gap: 10px;
+  min-height: 44px; font-size: 15px; color: var(--ink-soft);
+  cursor: pointer; user-select: none;
+}
+.remember-me input[type="checkbox"] {
+  width: 20px; height: 20px; margin: 0; accent-color: var(--teal);
+  flex: 0 0 auto; cursor: pointer;
+}
 .btn-ghost {
   min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--radius-sm);
   background: transparent; color: var(--ink-soft); font-size: 15px; font-weight: 500;
