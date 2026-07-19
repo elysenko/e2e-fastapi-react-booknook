@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: e2e-fastapi-react-booknook
+  namespace: colossus-e2e-fastapi-react-booknook
+  labels:
+    app: e2e-fastapi-react-booknook
+    managed-by: colossus
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ubuntu.desmana-truck.ts.net
+      http:
+        paths:
+          - path: /e2e-fastapi-react-booknook(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: e2e-fastapi-react-booknook
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - ubuntu.desmana-truck.ts.net
+      secretName: colossus-shared-tls

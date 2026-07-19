@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: e2e-fastapi-react-booknook
+  namespace: colossus-e2e-fastapi-react-booknook
+  labels:
+    app: e2e-fastapi-react-booknook
+    managed-by: colossus
+spec:
+  type: ClusterIP
+  selector:
+    app: e2e-fastapi-react-booknook
+  ports:
+    - port: 80
+      targetPort: 80
