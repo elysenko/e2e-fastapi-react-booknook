@@ -103,7 +103,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .auth-brand { text-align: center; margin-bottom: 22px; }
 .brand-mark { font-size: 34px; line-height: 1; }
-.auth-title { font-size: 28px; margin-top: 8px; }
+.auth-title { font-size: 40px; font-weight: 800; margin-top: 8px; }
 .auth-sub { color: var(--ink-soft); margin: 6px 0 0; font-size: 15px; }
 .auth-form { display: flex; flex-direction: column; gap: 16px; }
 .auth-switch { text-align: center; margin: 20px 0 0; color: var(--ink-soft); font-size: 14px; }
